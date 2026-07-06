@@ -918,7 +918,9 @@
   .emi-precio small{font-size:2rem;vertical-align:.4em}
   .emi-registro__nota{color:var(--texto-suave);font-size:.98rem;max-width:44ch;margin:0 auto}
   .emi-registro .actions{margin-top:2rem;display:flex;justify-content:center;flex-wrap:wrap;gap:1.2rem}
-  .btn-amigo--lg{font-size:1.05rem;padding:.9rem 2rem}
+  .btn-amigo--lg{font-size:1.05rem;padding:.9rem 2rem;border-radius:16px}
+  /* Radio proporcional al mayor tamaño → misma curvatura visual que el botón del hero */
+  @supports (corner-shape:superellipse(2)){.btn-amigo--lg{border-radius:20px;corner-shape:superellipse(2.2)}}
   /* ── BECA · subsección de descuento ── */
   .emi-beca{margin-top:2rem;padding:1.6rem 1.7rem;border-radius:22px;text-align:left;
     display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;
@@ -2112,10 +2114,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── Parámetros (ajuste fino) ──
   const SIM         = 256;     // resolución de simulación (LINEAR la suaviza)
   const DISSIP      = 0.95;    // disipación: estela cromática que se evapora rápido
-  const SPLAT_SIGMA = 0.0058;  // radio de estela · claramente visible al mover el cursor
-  const VEL_SCALE   = 8.0;     // intensidad del vector de velocidad inyectado
+  const SPLAT_SIGMA = 0.0009;  // radio del cursor (hilo milimétrico) · idéntico a la home
+  const VEL_SCALE   = 7.0;     // intensidad del vector de velocidad inyectado
   const ADVECT      = 3.4;     // arrastre del fluido sobre sí mismo
-  const DISTORT     = 0.016;   // distorsión de lente sutil (cristalina, sin afectar al texto)
+  const DISTORT     = 0.010;   // distorsión óptica de refracción
   const LINO = [0.980, 0.965, 0.941];
   let W, H, dpr;
 
@@ -2236,8 +2238,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 5. Veladura hiper-translúcida: alpha proporcional a la densidad física
       //    (opacidad máxima ~0.14) + un plus de caustica en las crestas.
-      float alpha = smoothstep(0.005, 0.5, speed) * 0.30 + relieve * 1.0;
-      alpha = clamp(alpha, 0.0, 0.42);
+      float alpha = smoothstep(0.005, 0.5, speed) * 0.14 + relieve * 0.9;
+      alpha = clamp(alpha, 0.0, 0.18);
 
       // Mezcla de la veladura de color sobre el fondo vivo
       vec3 finalColor = mix(base, fluidColor, alpha);
